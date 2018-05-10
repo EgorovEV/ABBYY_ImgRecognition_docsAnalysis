@@ -8,21 +8,17 @@ def load_image(file_name, number):
     img.load()
     print(img.format, img.mode, img.size)
     bw = img.convert('L')
-
-    #print(bw.size)
     bw_data = np.array(bw).astype('int32')
-    #print(bw_data.shape)
     bins = np.array(range(0,255))
+    
     counts, pixels =np.histogram(bw_data, bins)
     pixels = pixels[:-1]
     plt.bar(pixels, counts, align='center')
     plt.savefig('histogram' +str(number) + '.png')
     plt.xlim(-1, 256)
-    plt.show()
+    # plt.show()
 
     total_counts = np.sum(counts)
-    # assert total_counts == bw_data.shape[0]*bw_data.shape[1]
-
     return bins, counts, pixels, bw_data, total_counts
 
 def otsu(gray, bins, total_counts):
@@ -39,16 +35,11 @@ def otsu(gray, bins, total_counts):
         muf = np.mean(his[t:])
 
         value = Wb * Wf * (mub - muf) ** 2
-
-        # print("Wb", Wb, "Wf", Wf)
-        # print("t", t, "value", value)
-
         if value > final_value:
             final_thresh = t
             final_value = value
-            #print("new t = ", t)
     final_img = gray.copy()
-    print(final_thresh)
+    print("bound value = ", final_thresh)
     final_img[gray > final_thresh] = 255
     final_img[gray < final_thresh] = 0
     return final_img
@@ -71,8 +62,8 @@ def main():
             figname = str(i) + '_otsu.jpg'
 
         plt.savefig(figname)
-        plt.show()
-    print("----END!----")
+        # plt.show()
+    # print("----END!----")
 
 
 
